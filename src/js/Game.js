@@ -2,49 +2,64 @@ export default class Game {
   constructor() {
     this.addition = null;
     this.cellScore = null;
+    this.cellFailure = null;
+    this.button = null;
     this.boardSize = 4;
     this.container = null;
     this.cells = [];
     this.goblin = null;
     this.currentIndex = null;
-    this.timerId = null;
   }
 
-  bindToDOM(container, addition) {
-    if (!(container instanceof HTMLElement)) {
-      throw new Error('Container is not HTMLElement');
-    }
-
-    if (!(addition instanceof HTMLElement)) {
-      throw new Error('Addition is not HTMLElement');
-    }
+  bindToDOM(container, addition, button) {
+    if (!(container instanceof HTMLElement)) throw new Error('Container is not HTMLElement');
+    if (!(addition instanceof HTMLElement)) throw new Error('Addition is not HTMLElement');
+    if (!(button instanceof HTMLElement)) throw new Error('Button is not HTMLElement');
 
     this.container = container;
     this.addition = addition;
+    this.button = button;
   }
 
   checkBinding() {
-    if (this.container === null) {
-      throw new Error('Board not bind to DOM');
-    }
-
-    if (this.addition === null) {
-      throw new Error('Addition not bind to DOM');
-    }
+    if (this.container === null) throw new Error('Board not bind to DOM');
+    if (this.addition === null) throw new Error('Addition not bind to DOM');
+    if (this.button === null) throw new Error('Button not bind to DOM');
   }
 
   drawAddition() {
     this.checkBinding();
 
-    const elText = document.createElement('span');
-    elText.textContent = 'Количество набранных баллов: ';
-    this.addition.appendChild(elText);
+    const divSuccess = document.createElement('div');
+    this.addition.appendChild(divSuccess);
+
+    const elTextS = document.createElement('span');
+    elTextS.textContent = 'Количество набранных баллов: ';
+    divSuccess.appendChild(elTextS);
 
     const elScore = document.createElement('span');
     elScore.textContent = '0';
-    this.addition.appendChild(elScore);
+    divSuccess.appendChild(elScore);
+
+    const divFailure = document.createElement('div');
+    this.addition.appendChild(divFailure);
+
+    const elTextF = document.createElement('span');
+    elTextF.textContent = 'Количество промахов: ';
+    divFailure.appendChild(elTextF);
+
+    const elNumber = document.createElement('span');
+    elNumber.textContent = '0';
+    divFailure.appendChild(elNumber);
+
+    const btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.classList.add('button');
+    btn.textContent = 'Новая игра';
+    this.button.appendChild(btn);
 
     this.cellScore = elScore;
+    this.cellFailure = elNumber;
   }
 
   drawBoard() {
@@ -83,7 +98,5 @@ export default class Game {
   drawGame() {
     this.drawAddition();
     this.drawBoard();
-
-    this.timerId = setInterval(() => this.redrawPositions(), 1000);
   }
 }
